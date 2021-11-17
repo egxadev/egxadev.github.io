@@ -124,11 +124,25 @@ html {
 }
 
 .text {
-    font-size: 40px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
+}
+
+.hi {
+    font-size: 7vw;
+}
+
+.greeting {
+    font-size: 5vw;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.jobdesk {
+    font-size: 2vw;
+    text-align: center;
 }
 
 @keyframes blink {
@@ -242,7 +256,15 @@ a:hover {
 /* Responsive */
 @media only screen and (max-width: 450px) {
     .text {
-        margin-top: 5rem;
+        margin-top: 1rem;
+    }
+
+    .greeting {
+        font-size: 1.5rem;
+    }
+
+    .jobdesk {
+        font-size: 2px;
     }
 }
 
@@ -341,6 +363,7 @@ img {
 }
 
 .l-main .text {
+    margin-top: 4vw;
     width: 100%;
 }
 
@@ -559,7 +582,7 @@ img {
 }
 
 .menu__img {
-    width: 100px;
+    /* width: 100px; */
     align-self: center;
     margin-bottom: var(--mb-2);
 }
@@ -688,6 +711,10 @@ p {
     margin-right: var(--mb-2);
 }
 
+.footer__social:hover {
+    color: var(--first-color);
+}
+
 .footer__title {
     font-size: var(--h2-font-size);
     color: var(--title-color);
@@ -782,8 +809,8 @@ p {
     }
 
     .menu__container {
-        grid-template-columns: repeat(3, 280px);
-        column-gap: 4rem;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 1.5rem;
     }
     .menu__content {
         padding: 1.5rem;
