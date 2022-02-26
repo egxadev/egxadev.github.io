@@ -3,7 +3,7 @@
 particlesJS('particles-js', {
     particles: {
         number: {
-            value: 140,
+            value: 60,
             density: {
                 enable: true,
                 value_area: 800,
@@ -39,7 +39,7 @@ particlesJS('particles-js', {
             },
         },
         size: {
-            value: 8,
+            value: 4,
             random: true,
             anim: {
                 enable: false,
@@ -94,8 +94,8 @@ particlesJS('particles-js', {
     },
     retina_detect: true,
 });
-const allElements = document.querySelectorAll('.animated-text');
 
+const allElements = document.querySelectorAll('.animated-text');
 // It checks if there is at least one element
 if (allElements.length > 0) {
     //It runs the script for each found element
@@ -103,9 +103,7 @@ if (allElements.length > 0) {
         const txtElement = element,
             wordsList = txtElement.getAttribute('data-words'),
             words = wordsList.split(', '); // It makes an array of words from data attribute
-
         let wordsCount = 0;
-
         entry();
 
         // Initial function
