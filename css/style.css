@@ -604,7 +604,7 @@ p {
 }
 
 .animated-text:after {
-    content: ' |';
+    content: '|';
     display: inline-block;
     width: 10px;
     text-indent: 0;
