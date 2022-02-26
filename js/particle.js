@@ -3,7 +3,7 @@
 particlesJS('particles-js', {
     particles: {
         number: {
-            value: 60,
+            value: 80,
             density: {
                 enable: true,
                 value_area: 800,
@@ -75,7 +75,7 @@ particlesJS('particles-js', {
         events: {
             onhover: {
                 enable: true,
-                mode: 'repulse',
+                mode: 'grab',
             },
             onclick: {
                 enable: true,
@@ -89,6 +89,9 @@ particlesJS('particles-js', {
             },
             push: {
                 particles_nb: 4,
+            },
+            grab: {
+                distance: 200,
             },
         },
     },
