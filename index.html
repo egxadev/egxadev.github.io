@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of Ega Alifya Firnando — Fullstack Developer crafting performant, accessible web experiences." />
+  <title>Ega Alifya Firnando · Web Developer</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"DM Serif Display"', 'Georgia', 'serif'],
+            mono: ['"DM Mono"', '"Courier New"', 'monospace'],
+          },
+          colors: {
+            bg:       { DEFAULT: '#0d0d0d', alt: '#141414' },
+            surface:  '#1a1a1a',
+            border:   '#2a2a2a',
+            fg:       { DEFAULT: '#f0ece4', muted: '#7a766e' },
+            accent:   { DEFAULT: '#d4a853', glow: 'rgba(212,168,83,0.25)' },
+          },
+        },
+      },
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Custom Properties ── */
+    :root {
+      --bg:        #0d0d0d;
+      --bg-alt:    #141414;
+      --surface:   #1a1a1a;
+      --border:    #2a2a2a;
+      --fg:        #f0ece4;
+      --fg-muted:  #7a766e;
+      --accent:    #d4a853;
+      --accent-glow: rgba(212,168,83,0.25);
+      --radius:    2px;
+    }
+
+    /* ── Noise Overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Selection ── */
+    ::selection {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* ── Scrollbar ── */
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) var(--bg);
+    }
+
+    /* ── Custom Utilities ── */
+    .text-balance { text-wrap: balance; }
+
+    /* ── Staggered Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    /* ── Hero Decorative Line ── */
+    .hero-accent {
+      position: relative;
+    }
+    .hero-accent::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 60%;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: accentReveal 1s 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes accentReveal { to { transform: scaleX(1); } }
+
+    /* ── Glow Pulse ── */
+    .glow-pulse {
+      box-shadow: 0 0 20px var(--accent-glow), 0 0 60px var(--accent-glow);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px var(--accent-glow), 0 0 60px var(--accent-glow); }
+      50%      { box-shadow: 0 0 30px var(--accent-glow), 0 0 80px var(--accent-glow); }
+    }
+
+    /* ── Project & Journey Card Hover ── */
+    .project-card, .journey-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  border-color 0.4s ease;
+    }
+    .project-card::before, .journey-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                                  var(--accent-glow), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .project-card:hover::before, .journey-card:hover::before {
+      opacity: 1;
+    }
+    .project-card:hover, .journey-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+    }
+
+    /* ── Skill Tag ── */
+    .skill-tag {
+      transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+    .skill-tag:hover {
+      background: var(--accent);
+      color: var(--bg);
+      transform: translateY(-2px);
+    }
+
+    /* ── Section Divider ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent), var(--border), transparent);
+    }
+    @media (min-width: 768px) {
+      .timeline::before {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 10px;
+      top: 16px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+      z-index: 2;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .journey-entry:hover .timeline-dot {
+      transform: scale(1.4);
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+    @media (min-width: 768px) {
+      .timeline-dot {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .journey-entry:hover .timeline-dot {
+        transform: translateX(-50%) scale(1.4);
+      }
+    }
+    .journey-entry {
+      position: relative;
+      padding-left: 44px;
+      padding-bottom: 48px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .journey-entry.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (min-width: 768px) {
+      .journey-entry {
+        padding-left: 0;
+        width: calc(50% - 32px);
+      }
+      .journey-entry:nth-child(odd) {
+        margin-left: auto;
+        padding-left: 32px;
+        text-align: left;
+      }
+      .journey-entry:nth-child(even) {
+        margin-right: auto;
+        padding-right: 32px;
+        text-align: right;
+      }
+    }
+    .journey-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+                  border-color 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .journey-card {
+        padding: 2rem;
+      }
+    }
+    .journey-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                                  var(--accent-glow), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .journey-card:hover::before {
+      opacity: 1;
+    }
+
+    /* ── Diagonal Accent ── */
+    .diagonal-strip {
+      background: repeating-linear-gradient(
+        -35deg,
+        transparent,
+        transparent 2px,
+        var(--accent) 2px,
+        var(--accent) 3px
+      );
+      opacity: 0.06;
+    }
+  </style>
+</head>
+
+<body class="bg-bg text-fg font-mono antialiased">
+
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-md border-b border-border">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-display text-xl tracking-tight text-fg hover:text-accent transition-colors duration-300">
+        EAF<span class="text-accent">.</span>
+      </a>
+      <ul class="hidden sm:flex items-center gap-8 text-sm uppercase tracking-widest text-fg-muted">
+        <li><a href="#journey"    class="hover:text-accent transition-colors duration-200">Journey</a></li>
+        <li><a href="#work"       class="hover:text-accent transition-colors duration-200">Projects</a></li>
+        <li><a href="#about"      class="hover:text-accent transition-colors duration-200">About</a></li>
+        <li><a href="#skills"     class="hover:text-accent transition-colors duration-200">Skills</a></li>
+        <li>
+          <a href="#contact" class="px-4 py-2 border border-accent text-accent hover:bg-accent hover:text-bg transition-all duration-300 text-xs">
+            Contact
+          </a>
+        </li>
+      </ul>
+      <button id="menu-btn" class="sm:hidden text-fg-muted hover:text-accent transition-colors" aria-label="Toggle menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path id="menu-icon-top"    d="M4 6h16" />
+          <path id="menu-icon-mid"    d="M4 12h16" />
+          <path id="menu-icon-bottom" d="M4 18h16" />
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="sm:hidden hidden bg-bg__alt border-b border-border">
+      <div class="px-6 py-4 flex flex-col gap-3 text-sm uppercase tracking-widest text-fg-muted">
+        <a href="#journey"    class="hover:text-accent transition-colors">Journey</a>
+        <a href="#work"       class="hover:text-accent transition-colors">Projects</a>
+        <a href="#about"      class="hover:text-accent transition-colors">About</a>
+        <a href="#skills"     class="hover:text-accent transition-colors">Skills</a>
+        <a href="#contact"    class="hover:text-accent transition-colors">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="min-h-screen flex items-center relative overflow-hidden pt-16">
+    <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent/3 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto px-6 w-full">
+      <div class="max-w-3xl">
+        <p class="reveal text-xs sm:text-sm uppercase tracking-[0.3em] text-accent mb-8 font-medium">
+          Full-Stack Developer & Linux Administrator
+        </p>
+        <h1 class="reveal reveal-delay-1 font-display text-5xl sm:text-7xl md:text-8xl leading-[0.9] text-balance">
+          <span class="hero-accent">Ega</span><br />
+          <span class="text-fg-muted italic">Alifya Firnando</span>
+        </h1>
+        <p class="reveal reveal-delay-2 text-fg-muted text-base sm:text-lg max-w-xl mt-8 leading-relaxed">
+          Crafting optimal, scalable web applications within the JavaScript and PHP ecosystems while ensuring high-performance infrastructure orchestration.
+        </p>
+        <div class="reveal reveal-delay-3 flex flex-wrap gap-4 mt-10">
+          <a href="#journey"
+             class="px-6 py-3 border border-accent text-accent text-sm uppercase tracking-widest hover:bg-accent hover:text-bg transition-all duration-300 font-medium">
+            Professional Journey ↓
+          </a>
+          <a href="#contact"
+             class="px-6 py-3 border border-border text-fg-muted text-sm uppercase tracking-widest hover:border-fg-muted hover:text-fg transition-all duration-300">
+            Get in Touch
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 font-display text-[20rem] leading-none text-surface select-none pointer-events-none hidden lg:block" aria-hidden="true">
+      01
+    </div>
+  </header>
+
+  <section id="journey" class="py-24 sm:py-32 relative overflow-hidden">
+    <!-- Background decorative -->
+    <div class="absolute top-0 right-0 w-80 h-80 bg-accent/3 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3 pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-accent/3 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3 pointer-events-none" aria-hidden="true"></div>
+
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex items-center gap-6 mb-16">
+        <span class="text-accent text-xs uppercase tracking-[0.3em] font-medium reveal">Professional Journey</span>
+        <div class="flex-1 h-px bg-border reveal reveal-delay-1"></div>
+        <span class="font-display text-8xl text-surface leading-none select-none reveal reveal-delay-2" aria-hidden="true">02</span>
+      </div>
+
+      <div class="timeline max-w-3xl mx-auto">
+
+        <!-- Entry 1 — Present -->
+        <div class="journey-entry reveal">
+          <div class="timeline-dot glow-pulse"></div>
+          <div class="journey-card">
+            <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">June 2024 — Present</span>
+            <h3 class="font-display text-xl sm:text-2xl mt-2 leading-tight">PT. Genesys Integrated Indonesia</h3>
+            <p class="text-fg-muted text-xs uppercase tracking-widest mt-1">Web Developer</p>
+            <ul class="text-fg-muted text-xs mt-3 space-y-1.5 list-disc list-inside">
+              <li>Building scalable and optimized system architectures.</li>
+              <li>Maintaining and advancing core production digital platforms.</li>
+              <li>Ensuring clean, responsive, and highly user-friendly interfaces.</li>
+              <li>Diagnosing system bottlenecks and handling critical bug fixing.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Entry 2 -->
+        <div class="journey-entry reveal reveal-delay-1">
+          <div class="timeline-dot"></div>
+          <div class="journey-card">
+            <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">Mar 2023 — June 2024</span>
+            <h3 class="font-display text-xl sm:text-2xl mt-2 leading-tight">PT. Digital Solusi Master</h3>
+            <p class="text-fg-muted text-xs uppercase tracking-widest mt-1">Full-stack Web Developer</p>
+            <ul class="text-fg-muted text-xs mt-3 space-y-1.5 list-disc list-inside">
+              <li>Communicating with teams and clients alongside system requirements analysis.</li>
+              <li>Transforming UI/UX prototypes into efficient, structured frontend code.</li>
+              <li>Provisioning production web servers and handling continuous applications deployment.</li>
+              <li>Isolating complex architectural bottlenecks and resolving system bugs.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Entry 3 -->
+        <div class="journey-entry reveal reveal-delay-2">
+          <div class="timeline-dot"></div>
+          <div class="journey-card">
+            <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">Sept 2022 — Feb 2023</span>
+            <h3 class="font-display text-xl sm:text-2xl mt-2 leading-tight">PT. Digital Solusi Master</h3>
+            <p class="text-fg-muted text-xs uppercase tracking-widest mt-1">Web Developer Internship</p>
+            <ul class="text-fg-muted text-xs mt-3 space-y-1.5 list-disc list-inside">
+              <li>Assisting in developing and maintaining web applications codebases.</li>
+              <li>Implementing responsive front-end components and routine feature updates.</li>
+              <li>Troubleshooting minor operational bugs and structural UI layout testing.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Entry 4 -->
+        <div class="journey-entry reveal reveal-delay-3">
+          <div class="timeline-dot"></div>
+          <div class="journey-card">
+            <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">Sept 2021 — Dec 2021</span>
+            <h3 class="font-display text-xl sm:text-2xl mt-2 leading-tight">PT. Arsenet Global Solusi</h3>
+            <p class="text-fg-muted text-xs uppercase tracking-widest mt-1">Network Operation Center Internship</p>
+            <ul class="text-fg-muted text-xs mt-3 space-y-1.5 list-disc list-inside">
+              <li>Monitoring core internet service provider (ISP) network infrastructure nodes.</li>
+              <li>Assisting teams in triaging real-time network disruptions and connectivity outages.</li>
+              <li>Performing preventative hardware maintenance and networking software updates.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="py-24 sm:py-32 relative bg-bg_alt/40 border-y border-border">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex items-center gap-6 mb-16">
+        <span class="text-accent text-xs uppercase tracking-[0.3em] font-medium reveal">Selected Projects</span>
+        <div class="flex-1 h-px bg-border reveal reveal-delay-1"></div>
+        <span class="font-display text-8xl text-surface leading-none select-none reveal reveal-delay-2" aria-hidden="true">03</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <article class="project-card group bg-surface border border-border p-6 sm:p-8 rounded-sm col-span-1 md:col-span-2 md:grid md:grid-cols-2 md:gap-8 reveal">
+          <div>
+            <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">2026 · FinTech Core</span>
+            <h3 class="font-display text-3xl sm:text-4xl mt-4 leading-tight">Co-operative Core Finance System</h3>
+            <p class="text-fg-muted text-sm mt-4 leading-relaxed max-w-md">
+              A high-integrity financial engine handling savings and loan lifecycles. Engineered with strict relational schemas, utilizing specific value matrices for tracking ledger data without calculating loose percentages.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-6">
+              <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Node.js</span>
+              <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">PostgreSQL</span>
+              <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Express.js</span>
+              <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">SQL Optimizer</span>
+            </div>
+          </div>
+          <div class="mt-8 md:mt-0 flex items-center justify-center">
+            <div class="w-full aspect-video bg-bg-alt border border-border rounded-sm flex items-center justify-center group-hover:border-accent/40 transition-colors duration-400">
+              <span class="text-fg-muted/30 text-sm uppercase tracking-widest">Backend Staging</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card bg-surface border border-border p-6 sm:p-8 rounded-sm reveal reveal-delay-1">
+          <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">2026 · SaaS Architecture</span>
+          <h3 class="font-display text-2xl sm:text-3xl mt-4 leading-tight">Digital Wedding SaaS</h3>
+          <p class="text-fg-muted text-sm mt-4 leading-relaxed">
+            A digital multi-tenant invitation platform optimized for the Indonesian market. Built with efficient asset delivery workflows utilizing granular base path mapping instead of complex external domain dependencies.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-6">
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">PHP</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Laravel</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">MySQL</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Tailwind CSS</span>
+          </div>
+          <div class="mt-6 aspect-video bg-bg-alt border border-border rounded-sm flex items-center justify-center group-hover:border-accent/40 transition-colors duration-400">
+            <span class="text-fg-muted/30 text-sm uppercase tracking-widest">Platform Core</span>
+          </div>
+        </article>
+
+        <article class="project-card bg-surface border border-border p-6 sm:p-8 rounded-sm reveal reveal-delay-2 md:translate-y-12">
+          <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">2026 · Commercial App</span>
+          <h3 class="font-display text-2xl sm:text-3xl mt-4 leading-tight">FnB Point of Sale Platform</h3>
+          <p class="text-fg-muted text-sm mt-4 leading-relaxed">
+            Real-time transactional system optimized for quick-service dining. Implements bulletproof system architecture, rapid checkout processing states, and a clean interfaces framework built for maximum component reusability.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-6">
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Next.js</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Shadcn UI</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Node Express</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">PostgreSQL</span>
+          </div>
+          <div class="mt-6 aspect-video bg-bg-alt border border-border rounded-sm flex items-center justify-center group-hover:border-accent/40 transition-colors duration-400">
+            <span class="text-fg-muted/30 text-sm uppercase tracking-widest">PRD Drafted</span>
+          </div>
+        </article>
+
+        <article class="project-card bg-surface border border-border p-6 sm:p-8 rounded-sm reveal reveal-delay-3 md:-translate-y-12">
+          <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">2026 · Infrastructure Lab</span>
+          <h3 class="font-display text-2xl sm:text-3xl mt-4 leading-tight">STB Bare-Metal Cluster</h3>
+          <p class="text-fg-muted text-sm mt-4 leading-relaxed">
+            Orchestration layer running on low-power Set-Top Box servers. Uses secure encrypted tunneling services to securely route multi-tenant testing staging environments globally without handling firewall port-forwarding overhead.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-6">
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Armbian Linux</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Cloudflare Tunnel</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">Podman WSL2</span>
+            <span class="skill-tag px-3 py-1 text-xs border border-border text-fg-muted rounded-sm">PM2 Process</span>
+          </div>
+          <div class="mt-6 aspect-video bg-bg-alt border border-border rounded-sm flex items-center justify-center group-hover:border-accent/40 transition-colors duration-400">
+            <span class="text-fg-muted/30 text-sm uppercase tracking-widest">Active System</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="py-24 sm:py-32 relative">
+    <div class="absolute inset-0 diagonal-strip pointer-events-none" aria-hidden="true"></div>
+    <div class="max-w-6xl mx-auto px-6 relative">
+      <div class="flex items-center gap-6 mb-16">
+        <span class="text-accent text-xs uppercase tracking-[0.3em] font-medium reveal">About Me</span>
+        <div class="flex-1 h-px bg-border reveal reveal-delay-1"></div>
+        <span class="font-display text-8xl text-surface leading-none select-none reveal reveal-delay-2" aria-hidden="true">04</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-20">
+        <div class="lg:col-span-3">
+          <blockquote class="reveal font-display text-2xl sm:text-3xl md:text-4xl leading-tight text-balance">
+            &#8220;I believe great software is a product of <span class="text-accent italic">high code quality</span>, industry best practices, and rock-solid infrastructure.&#8221;
+          </blockquote>
+          <p class="reveal reveal-delay-1 text-fg-muted text-sm mt-8 leading-relaxed max-w-xl">
+            I'm a web developer with a solid educational background in Computer Engineering from Politeknik Negeri Jember (GPA 3.79). Over the years, I've honed my skills across the JavaScript and PHP ecosystems to build performant web engines.
+          </p>
+          <p class="reveal reveal-delay-2 text-fg-muted text-sm mt-4 leading-relaxed max-w-xl">
+            Beyond software engineering, I manage bare-metal setups using containerized environments via Podman inside local WSL instances and low-power Armbian configurations, keeping development tools light and clean.
+          </p>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6 reveal reveal-delay-3">
+          <div class="border-l-2 border-accent pl-6">
+            <span class="text-4xl font-display text-fg">3+</span>
+            <p class="text-xs uppercase tracking-[0.2em] text-fg-muted mt-1">Years Experience</p>
+          </div>
+          <div class="border-l-2 border-border pl-6">
+            <span class="text-4xl font-display text-fg">3.79</span>
+            <p class="text-xs uppercase tracking-[0.2em] text-fg-muted mt-1">Computer Engineering GPA</p>
+          </div>
+          <div class="border-l-2 border-border pl-6">
+            <span class="text-4xl font-display text-fg">AWS & DevOps</span>
+            <p class="text-xs uppercase tracking-[0.2em] text-fg-muted mt-1">Dicoding Specialist Certs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex items-center gap-6 mb-16">
+        <span class="text-accent text-xs uppercase tracking-[0.3em] font-medium reveal">Skills & Stack</span>
+        <div class="flex-1 h-px bg-border reveal reveal-delay-1"></div>
+        <span class="font-display text-8xl text-surface leading-none select-none reveal reveal-delay-2" aria-hidden="true">05</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div>
+          <h4 class="text-accent text-xs uppercase tracking-[0.2em] font-medium mb-5">Core Languages</h4>
+          <ul class="space-y-2">
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">JavaScript</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">PHP</li>
+          </ul>
+        </div>
+        <div class="reveal reveal-delay-1">
+          <h4 class="text-accent text-xs uppercase tracking-[0.2em] font-medium mb-5">Frameworks</h4>
+          <ul class="space-y-2">
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Next.js / React.js</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Node.js / Vue.js</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Laravel / Lumen</li>
+          </ul>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <h4 class="text-accent text-xs uppercase tracking-[0.2em] font-medium mb-5">Databases</h4>
+          <ul class="space-y-2">
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">PostgreSQL</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">MySQL</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">MariaDB</li>
+          </ul>
+        </div>
+        <div class="reveal reveal-delay-3">
+          <h4 class="text-accent text-xs uppercase tracking-[0.2em] font-medium mb-5">Infrastructure</h4>
+          <ul class="space-y-2">
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Linux System Admin</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Containerization</li>
+            <li class="skill-tag px-3 py-2 border border-border text-fg-muted text-sm rounded-sm cursor-default">Architecting on AWS</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-6xl mx-auto px-6"><div class="section-divider"></div></div>
+
+  <section id="contact" class="py-24 sm:py-32 relative">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex items-center gap-6 mb-16">
+        <span class="text-accent text-xs uppercase tracking-[0.3em] font-medium reveal">Contact</span>
+        <div class="flex-1 h-px bg-border reveal reveal-delay-1"></div>
+        <span class="font-display text-8xl text-surface leading-none select-none reveal reveal-delay-2" aria-hidden="true">06</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        <div>
+          <h2 class="reveal font-display text-3xl sm:text-4xl md:text-5xl leading-tight text-balance">
+            Let's build something <span class="text-accent italic">resilient</span> together.
+          </h2>
+          <p class="reveal reveal-delay-1 text-fg-muted text-sm mt-6 leading-relaxed max-w-md">
+            I am currently open to engineering optimal web structures or handling infrastructure automation setups. Get in touch via email directly.
+          </p>
+          <div class="reveal reveal-delay-2 flex flex-wrap gap-4 mt-8">
+            <a href="mailto:eafirnando.tech@gmail.com"
+               class="px-6 py-3 border border-accent text-accent text-sm uppercase tracking-widest hover:bg-accent hover:text-bg transition-all duration-300 font-medium">
+              eafirnando.tech@gmail.com
+            </a>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-3 space-y-6">
+          <div class="border-l-2 border-accent pl-6">
+            <span class="text-xs uppercase tracking-[0.2em] text-fg-muted">GitHub Portfolio</span>
+            <a href="https://github.com/egxadev" target="_blank" class="block text-fg hover:text-accent transition-colors duration-200 mt-1 font-medium">github.com/egxadev</a>
+          </div>
+          <div class="border-l-2 border-border pl-6">
+            <span class="text-xs uppercase tracking-[0.2em] text-fg-muted">LinkedIn</span>
+            <a href="https://linkedin.com/in/egaalifyafirnando" target="_blank" class="block text-fg hover:text-accent transition-colors duration-200 mt-1 font-medium">linkedin.com/in/egaalifyafirnando</a>
+          </div>
+          <div class="border-l-2 border-border pl-6">
+            <span class="text-xs uppercase tracking-[0.2em] text-fg-muted">Location</span>
+            <p class="text-fg mt-1 font-medium">Sidoarjo, East Java, Indonesia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 border-t border-border">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-fg-muted">
+        &copy; 2026 Ega Alifya Firnando. Crafted with structural integrity.
+      </p>
+      <a href="#" class="text-xs text-fg-muted hover:text-accent transition-colors duration-200 flex items-center gap-1">
+        Back to top
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    // Mouse glow for both project and journey cards
+    document.querySelectorAll('.project-card, .journey-card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      });
+    });
+
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+  </script>
+</body>
+</html>
